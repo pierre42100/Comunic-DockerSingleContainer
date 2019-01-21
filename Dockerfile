@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND="noninteractive" HOME="/"
 
 #Install dependencies
 RUN apt update
-RUN apt install -y apache2 php7.0 php7.0-mysql php7.0-gd php7.0-mbstring mysql-server git uglifyjs
+RUN apt install -y apache2 php7.0 php7.0-mysql php7.0-gd php7.0-mbstring mysql-server git uglifyjs zip
 
 #Add shorcuts
 RUN echo 'eval "mysqld_safe&"; sleep 10;' > /root/start_mysql.sh
@@ -24,11 +24,11 @@ RUN git clone https://github.com/pierre42100/ComunicAPI /data/api
 #Import database
 RUN sh /root/start_mysql.sh; mysql comunic < /data/api/db_struct.sql; exit
 
-#Create API client
-RUN sh /root/start_mysql.sh; /data/api/bin/add_client client token; exit
-
 #Update API config
 COPY overwriteAPIconfig.php /data/api/config/
+
+#Create API client
+RUN sh /root/start_mysql.sh; /data/api/bin/add_client client token; exit
 
 #Initialize user data directory
 COPY empty_user_data_dir.tar.gz /root/
